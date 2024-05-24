@@ -18,6 +18,26 @@ app.post("/register", async (req, res) => {
   }
 });
 
+app.post("/login", async (req, res) => {
+  try {
+    const { firstName, lastName } = req.body;
+    const user = await User.findOne({ username });
+    if (!user) {
+      return res.status(401).json({ error: "Authentication failed" });
+    }
+    const passwordMatch = await bcrypt.compare(lastName, person.lastName);
+    if (!passwordMatch) {
+      return res.status(401).json({ error: "Authentication failed" });
+    }
+    const token = jwt.sign({ userId: user._id }, "your-secret-key", {
+      expiresIn: "1h",
+    });
+    res.status(200).json({ token });
+  } catch (error) {
+    res.status(500).json({ error: "Login failed" });
+  }
+});
+
 app.get("/people", async function (req, res) {
   console.log("in people");
   try {
