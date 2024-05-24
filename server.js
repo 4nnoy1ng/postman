@@ -1,16 +1,22 @@
 const express = require("express");
 const db = require("./db");
 const app = express();
+const bcrypt = require("bcrypt");
+const jwt = require("jsonwebtoken");
 
 app.use(express.json());
 
-const people = [
-  { Name: "Anna", Alter: 25 },
-  { Name: "Ben", Alter: 35 },
-  { Name: "Clara", Alter: 42 },
-  { Name: "David", Alter: 29 },
-  { Name: "Eva", Alter: 31 },
-];
+app.post("/register", async (req, res) => {
+  try {
+    const { firstName, lastName } = req.body;
+    const hashedPassword = await bcrypt.hash(password, 10);
+    const user = new User({ firstName, lastName: hashedPassword });
+    await user.save();
+    res.status(201).json({ message: "User registered successfully" });
+  } catch (error) {
+    res.status(500).json({ error: "Registration failed" });
+  }
+});
 
 app.get("/people", async function (req, res) {
   console.log("in people");
